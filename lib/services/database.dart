@@ -30,7 +30,8 @@ class DatabaseService {
   static Future<int> createItem(Todo todo) async {
     final db = await DatabaseService.initializeDb();
 
-    final id = await db.insert('Todos', Todo(content: todo.content, completed: todo.completed).toMap());
+    final id = await db.insert('Todos',
+        Todo(content: todo.content, completed: todo.completed).toMap());
     return id;
   }
 
@@ -44,9 +45,9 @@ class DatabaseService {
   static Future<Todo> getItem(int id) async {
     final db = await DatabaseService.initializeDb();
 
-    final List<Map<String, Object?>> queryResult = await db.query('Todos', where: "id = $id");
+    final List<Map<String, Object?>> queryResult =
+        await db.query('Todos', where: "id = $id");
 
-      
     print("BBBBBBBBB");
     print(queryResult[0]);
     print("AAAAAAAA");
@@ -58,10 +59,12 @@ class DatabaseService {
     );
   }
 
-  static updateTaskStatue(int id, bool isCompleted) async {
+  static Future<bool> updateTaskStatue(int id, bool isCompleted) async {
     final db = await DatabaseService.initializeDb();
 
     await db.update("Todos", {"completed": !isCompleted ? 1 : 0},
         where: 'id = $id');
+
+    return true;
   }
 }

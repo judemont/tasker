@@ -37,16 +37,27 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: Center(
-        child: ListView.builder(
+          child: ListView.builder(
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          return Row(children: [
-            Text(items[index].content),
-            TasksCheckbox(items[index].id),
-          ]);
+          return Material(
+            
+            child: CheckboxListTile (
+              title: Text(items[index].content),
+              value: items[index].completed,
+              onChanged: (value) {
+                print(value);
+                DatabaseService.updateTaskStatue(
+                        items[index].id!, items[index].completed)
+                    .then((value) {
+                  _loadData();
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            )
+          );
         },
-                )
-      ),
+      )),
       floatingActionButton: FloatingNewButton(
         onPressed: _loadData,
       ),
