@@ -1,6 +1,6 @@
 {
-    "name": "todolistv3",
-    "short_name": "todolistv3",
+    "name": "tasker",
+    "short_name": "tasker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

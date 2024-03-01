@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todolistv3/models/todo.dart';
-import 'package:todolistv3/screens/home.dart';
-import 'package:todolistv3/services/database.dart';
+import 'package:tasker/models/todo.dart';
+import 'package:tasker/screens/home.dart';
+import 'package:tasker/services/database.dart';
 
 class FloatingNewButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -34,9 +34,10 @@ class FloatingNewButton extends StatelessWidget {
                 print(_textFieldController.text);
 
                 DatabaseService.createItem(
-                  Todo(content: _textFieldController.text)).then((value) {
-                    onPressed();
-                  });
+                        Todo(content: _textFieldController.text))
+                    .then((value) {
+                  onPressed();
+                });
 
                 Navigator.pop(context, 'ok');
               },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todolistv3/models/todo.dart';
-import 'package:todolistv3/screens/home.dart';
-import 'package:todolistv3/services/database.dart';
+import 'package:tasker/models/todo.dart';
+import 'package:tasker/screens/home.dart';
+import 'package:tasker/services/database.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 Future<void> main() async {

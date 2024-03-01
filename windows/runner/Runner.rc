@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "todolistv3" "\0"
+            VALUE "CompanyName", "jdm.apps.tasker" "\0"
+            VALUE "FileDescription", "tasker" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "todolistv3" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "todolistv3.exe" "\0"
-            VALUE "ProductName", "todolistv3" "\0"
+            VALUE "InternalName", "tasker" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 jdm.apps.tasker. All rights reserved." "\0"
+            VALUE "OriginalFilename", "tasker.exe" "\0"
+            VALUE "ProductName", "tasker" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todolistv3/models/todo.dart';
-import 'package:todolistv3/services/database.dart';
+import 'package:tasker/models/todo.dart';
+import 'package:tasker/services/database.dart';
 
 class TasksCheckbox extends StatefulWidget {
   final int? taskID;
