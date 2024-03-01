@@ -1,15 +1,16 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/todo.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DatabaseService {
   static const String databaseName = "database.sqlite";
   static Database? db;
 
   static Future<Database> initializeDb() async {
-    final databasePath = await getDatabasesPath();
+    final databasePath = (await getApplicationDocumentsDirectory()).path;
     final path = join(databasePath, databaseName);
-
+    print(path);
     return db ??
         await openDatabase(path, version: 1,
             onCreate: (Database db, int version) async {

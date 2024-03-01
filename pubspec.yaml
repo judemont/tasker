@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   sqflite: ^2.3.2
   sqflite_common_ffi: ^2.3.2+1
+  sqlite3_flutter_libs: ^0.5.20
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
