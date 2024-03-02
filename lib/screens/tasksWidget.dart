@@ -35,12 +35,10 @@ class _TasksWidgetState extends State<TasksWidget> {
     print("COUNT2:"+widget.items.length.toString());
     return 
     ListView.builder(
-        itemCount: widget.items.length,
-        itemBuilder: (BuildContext context, int index) {
-          return  Text(widget.items[index].content);
-          
-          
-          /* CheckboxListTile(
+      shrinkWrap: true,
+      itemCount: widget.items.length,
+      itemBuilder: (BuildContext context, int index) {
+        return  CheckboxListTile(
             title: Text(widget.items[index].content),
             value: widget.items[index].completed,
             onChanged: (value) {
@@ -53,7 +51,7 @@ class _TasksWidgetState extends State<TasksWidget> {
             },
             controlAffinity: ListTileControlAffinity.leading,
           );
-          */
+          
         },
       );
       
