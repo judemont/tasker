@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasker/components/buttonNew.dart';
 import 'package:tasker/components/tasksCheckbox.dart';
 import 'package:tasker/models/todo.dart';
+import 'package:tasker/screens/tasksWidget.dart';
 import 'package:tasker/services/database.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,15 +14,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Todo> items = [];
-
-  Future<void> _loadData() async {
-    print("UPDATING DATA....");
-    DatabaseService.getItems().then((result) {
-      setState(() {
-        items = result;
-      });
-    });
-  }
 
   @override
   void initState() {
@@ -37,28 +29,25 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: Center(
-          child: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Material(
-              child: CheckboxListTile(
-            title: Text(items[index].content),
-            value: items[index].completed,
-            onChanged: (value) {
-              print(value);
-              DatabaseService.updateTaskStatue(
-                      items[index].id!, items[index].completed)
-                  .then((value) {
-                _loadData();
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-          ));
-        },
-      )),
-      floatingActionButton: FloatingNewButton(
-        onPressed: _loadData,
-      ),
+          child: Column(children: [
+            Text("Salut32"),
+            TasksWidget(items: items)
+          ])
+  
+    ),
+    floatingActionButton: FloatingNewButton(
+        onPressed: _loadData
+      )
     );
+  }
+
+  Future<void> _loadData() async {
+    print("UPDATING DATA....");
+    DatabaseService.getItems().then((result) {
+      setState(() {
+         print("COUNT:"+result.length.toString());
+        items = result;
+      });
+    });
   }
 }
