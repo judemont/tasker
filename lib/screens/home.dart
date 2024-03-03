@@ -31,7 +31,8 @@ class _HomePageState extends State<HomePage> {
           child: Column(
           children: [
             Text("Salut32"),
-            TasksWidget(items: items)
+            TasksWidget(items: items, onListChange: _loadData)
+            
           ])
   
     ),
