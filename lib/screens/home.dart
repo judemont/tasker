@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasker/components/buttonNew.dart';
 import 'package:tasker/components/tasksCheckbox.dart';
 import 'package:tasker/models/group.dart';
+
 import 'package:tasker/models/todo.dart';
 import 'package:tasker/screens/groupWidget.dart';
 import 'package:tasker/screens/tasksWidget.dart';
@@ -31,11 +32,13 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Tasker"),
         centerTitle: true,
       ),
-      body: Center(
-          child: Column(children: [
+
+      body: SingleChildScrollView(
+          child: Column(
+          children: [
             GroupWidget(groupItems: groups),
-            TasksWidget(items: items),
-          ])
+            TasksWidget(items: items, onListChange: _loadData)
+                      ])
   
     ),
     floatingActionButton: FloatingNewButton(
