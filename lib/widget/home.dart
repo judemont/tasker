@@ -19,52 +19,53 @@ class _HomePageState extends State<HomePage> {
   List<Todo> items = [];
   List<Group> groups = [];
 
-  int selectedGroupId = 1; 
-
+  int selectedGroupId = 1;
 
   @override
   void initState() {
-    _loadData();
+    _loadTodoFromGroup(selectedGroupId);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Tasker"),
-        centerTitle: true,
-      ),
-      body: Container(
-        margin: EdgeInsets.only(left: 30),
-        child: SingleChildScrollView(
-            child: Column(
-            children: [
-              GroupWidget(selectedGroupId : selectedGroupId,groupItems: groups,onListChange:  _loadGroups ,onTodoChange: _loadTodoFromGroup ,),
-              TasksWidget(items: items, onListChange: _loadData)
-                        ])
-          )
-      ),
-      endDrawer: const Drawer(
-        child: Settings()
-      ),
-      floatingActionButton: FloatingNewButton(
-        onPressed: (){
-          _loadTodoFromGroup(selectedGroupId);
-        },
-        groupeId: selectedGroupId,
-      ) 
-    );
+        appBar: AppBar(
+          title: const Text("Tasker"),
+          centerTitle: true,
+        ),
+        body: Container(
+            margin: EdgeInsets.only(left: 30),
+            child: SingleChildScrollView(
+                child: Column(children: [
+              GroupWidget(
+                selectedGroupId: selectedGroupId,
+                groupItems: groups,
+                onListChange: _loadGroups,
+                onTodoChange: _loadTodoFromGroup,
+              ),
+              TasksWidget(
+                  items: items,
+                  onListChange: () {
+                    _loadTodoFromGroup(selectedGroupId);
+                  })
+            ]))),
+        endDrawer: const Drawer(child: Settings()),
+        floatingActionButton: FloatingNewButton(
+          onPressed: () {
+            _loadTodoFromGroup(selectedGroupId);
+          },
+          groupeId: selectedGroupId,
+        ));
   }
 
   Future<void> _loadTodoFromGroup(int groupId) async {
-    selectedGroupId = groupId; 
+    selectedGroupId = groupId;
     print("function  _loadTodoFromGroup");
-    print("function  _loadTodoFromGroup ID:"+selectedGroupId.toString());
+    print("function  _loadTodoFromGroup ID:" + selectedGroupId.toString());
     DatabaseService.getItemFromGroup(selectedGroupId).then((value) {
-       setState(() {
-         print("Todo COUNT:${value.length}");
+      setState(() {
+        print("Todo COUNT:${value.length}");
         items = value;
       });
     });
@@ -72,24 +73,24 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadGroups() async {
     print("function  _loadGroups");
-        DatabaseService.getGroups().then((result){
+    DatabaseService.getGroups().then((result) {
       setState(() {
-         print("Group COUNT:${result.length}");
+        print("Group COUNT:${result.length}");
         groups = result;
-      });
-    } );
-  }
-
-  Future<void> _loadData() async {
-    print("UPDATING DATA......");
-
-    _loadGroups();
-
-    DatabaseService.getItems().then((result) {
-      setState(() {
-         print("Todo COUNT:${result.length}");
-        items = result;
       });
     });
   }
+
+  // Future<void> _loadData() async {
+  //   print("UPDATING DATA......");
+
+  //   _loadGroups();
+
+  //   DatabaseService.getItems().then((result) {
+  //     setState(() {
+  //        print("Todo COUNT:${result.length}");
+  //       items = result;
+  //     });
+  //   });
+  // }
 }
