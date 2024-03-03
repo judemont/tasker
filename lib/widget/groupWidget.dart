@@ -22,37 +22,38 @@ class _GroupWidgetState extends State<GroupWidget> {
     print("COUNT-GROUP:${widget.groupItems.length}");
     return Row(
       children: [
-     DropdownMenu(
-      initialSelection: widget.selectedGroupId,
-      onSelected: (value) {
-        print("On Selected ");
+      DropdownMenu(
+        width: MediaQuery.of(context).size.width * 0.5,
+        initialSelection: widget.selectedGroupId,
+        onSelected: (value) {
+          print("On Selected ");
 
-        setState(() {
-          print ("select value :"+value.toString());
-          
-          widget.selectedGroupId = value ;
-          //widget.onListChange;
-          widget.onTodoChange!(value);  
-        });
-        
-      },
-      controller: groupItemControler,
-      enableFilter: true,
-      requestFocusOnTap: true,
-      label: const Text("Select groupe"),
-      dropdownMenuEntries: widget.groupItems.map((e) {
-        return DropdownMenuEntry(value: e.id, label: e.name);
-      }).toList()
-    ),
-      IconButton(iconSize: 32, 
-        icon: const Icon(Icons.add_task),
-        onPressed:() {
           setState(() {
-            addGroup();  
+            print ("select value :"+value.toString());
+            
+            widget.selectedGroupId = value ;
+            //widget.onListChange;
+            widget.onTodoChange!(value);  
           });
           
-        } ,) ,
-    ],) ;
+        },
+        controller: groupItemControler,
+        enableFilter: true,
+        requestFocusOnTap: true,
+        label: const Text("Select groupe"),
+        dropdownMenuEntries: widget.groupItems.map((e) {
+          return DropdownMenuEntry(value: e.id, label: e.name);
+        }).toList()
+      ),
+        IconButton(iconSize: 32, 
+          icon: const Icon(Icons.add_task),
+          onPressed:() {
+            setState(() {
+              addGroup();  
+            });
+            
+          } ,) ,
+      ],) ;
   }
 
   addGroup() {

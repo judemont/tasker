@@ -36,13 +36,15 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Tasker"),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-          child: Column(
-          children: [
-            GroupWidget(selectedGroupId : selectedGroupId,groupItems: groups,onListChange:  _loadGroups ,onTodoChange: _loadTodoFromGroup ,),
-            TasksWidget(items: items, onListChange: _loadData)
-                      ])
-    
+      body: Container(
+        margin: EdgeInsets.only(left: 30),
+        child: SingleChildScrollView(
+            child: Column(
+            children: [
+              GroupWidget(selectedGroupId : selectedGroupId,groupItems: groups,onListChange:  _loadGroups ,onTodoChange: _loadTodoFromGroup ,),
+              TasksWidget(items: items, onListChange: _loadData)
+                        ])
+          )
       ),
       endDrawer: const Drawer(
         child: Settings()
