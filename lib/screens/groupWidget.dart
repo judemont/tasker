@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tasker/models/group.dart';
 
@@ -57,25 +56,24 @@ class _GroupWidgetState extends State<GroupWidget> {
     ],) ;
   }
 
-
-  addGroup()
-  {
+  addGroup() {
     var textFieldController = TextEditingController();
-    showDialog(context: context, builder:  (context) => AlertDialog(
-          title: const Text("New Groupe"),
-          content: TextField(
-            controller: textFieldController,
-            decoration:
-                const InputDecoration(hintText: "Group name"),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("New Groupe"),
+        content: TextField(
+          controller: textFieldController,
+          decoration: const InputDecoration(hintText: "Group name"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+            child: const Text('Cancel'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                print(textFieldController.text);
+          TextButton(
+            onPressed: () {
+              print(textFieldController.text);
 
                 DatabaseService.createGroup(
                         Group(name: textFieldController.text))
@@ -84,11 +82,12 @@ class _GroupWidgetState extends State<GroupWidget> {
                       widget.onTodoChange;
                 });
 
-                Navigator.pop(context, 'ok');
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),);
+              Navigator.pop(context, 'ok');
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }

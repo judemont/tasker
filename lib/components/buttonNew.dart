@@ -13,7 +13,7 @@ class FloatingNewButton extends StatelessWidget {
     var descriptionFieldController = TextEditingController();
 
     return FloatingActionButton(
-      child: const Icon(Icons.add_circle),
+      child: const Icon(Icons.add_task),
       onPressed: () => showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -41,9 +41,10 @@ class FloatingNewButton extends StatelessWidget {
             TextButton(
               onPressed: () {
                 print(titleFieldController.text);
+                print(descriptionFieldController.text);
 
                 DatabaseService.createItem(
-                        Todo(content: titleFieldController.text))
+                        Todo(content: titleFieldController.text, description: descriptionFieldController.text))
                     .then((value) {
                   onPressed();
                 });

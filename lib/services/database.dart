@@ -15,7 +15,7 @@ class DatabaseService {
     final path = join(databasePath, databaseName);
     print(path);
     return db ??
-        await openDatabase(path, version: 3,
+        await openDatabase(path, version: 4,
             onCreate: (Database db, int version) async {
           await createTables(db);
         }, onUpgrade: (db, oldVersion, newVersion) async {
@@ -83,6 +83,12 @@ print("** show tables **");
         });
 */
       } 
+
+            
+      if (oldVersion < 4) // add description
+      {
+        db.execute("""ALTER TABLE Todos ADD COLUMN description TEXT """);
+      } 
     }
   }
   
@@ -101,7 +107,7 @@ print("** show tables **");
     final db = await DatabaseService.initializeDb();
 
     final id = await db.insert('Todos',
-        Todo(content: todo.content, completed: todo.completed).toMap());
+        Todo(content: todo.content, completed: todo.completed, description: todo.description).toMap());
     return id;
   }
 
