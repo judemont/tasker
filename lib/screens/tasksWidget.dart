@@ -33,8 +33,7 @@ class _TasksWidgetState extends State<TasksWidget> {
   @override
   Widget build(BuildContext context) {
     print("COUNT2:"+widget.items.length.toString());
-    return 
-    ListView.builder(
+    return ListView.builder(
       shrinkWrap: true,
       itemCount: widget.items.length,
       itemBuilder: (BuildContext context, int index) {

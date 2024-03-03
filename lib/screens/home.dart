@@ -27,8 +27,9 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Tasker"),
         centerTitle: true,
       ),
-      body: Center(
-          child: Column(children: [
+      body: SingleChildScrollView(
+          child: Column(
+          children: [
             Text("Salut32"),
             TasksWidget(items: items)
           ])
