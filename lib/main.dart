@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tasker/screens/home.dart';
+import 'package:flutter/widgets.dart';
+import 'package:tasker/widget/home.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:tasker/widget/settings.dart';
 
 Future<void> main() async {
   sqfliteFfiInit();
@@ -21,8 +23,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Scaffold(
+      home: Scaffold(
+      appBar: AppBar(
+        title: const Text("Tasker"),
+        centerTitle: true,
+      ),
         body: HomePage(),
+        drawer: const Drawer(
+          child: Settings()
+        ),
       ),
     );
   }

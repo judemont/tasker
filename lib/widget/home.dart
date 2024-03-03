@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tasker/components/buttonNew.dart';
+import 'package:tasker/widget/buttonNew.dart';
 import 'package:tasker/models/group.dart';
 
 import 'package:tasker/models/todo.dart';
-import 'package:tasker/screens/groupWidget.dart';
-import 'package:tasker/screens/tasksWidget.dart';
+import 'package:tasker/widget/groupWidget.dart';
+import 'package:tasker/widget/tasksWidget.dart';
 import 'package:tasker/services/database.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,11 +27,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Tasker"),
-        centerTitle: true,
-      ),
-
       body: SingleChildScrollView(
           child: Column(
           children: [
