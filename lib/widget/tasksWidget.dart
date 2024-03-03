@@ -42,7 +42,7 @@ class _TasksWidgetState extends State<TasksWidget> {
           value: widget.items[index].completed,
           subtitle: Text(widget.items[index].description ?? ""),
           onChanged: (value) {
-            print(value);
+            print("ListBox Value : "+value.toString());
             DatabaseService.updateTaskStatue(
                     widget.items[index].id!, widget.items[index].completed)
                 .then((value) {

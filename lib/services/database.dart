@@ -29,11 +29,12 @@ class DatabaseService {
   static openDB(Database db) {
     
     //db.execute("UPDATE Todo SET groupId = 0 WHERE groupId IS NULL");
+    db.execute("UPDATE Todos SET groupId = 1 WHERE groupId is null OR groupId = 0 ");
     /*
     print("** rename table **"); 
         
         
-        db.execute("DROP TABLE Todos");
+        
 
     db.execute("""
       CREATE TABLE Todos(
@@ -45,7 +46,7 @@ class DatabaseService {
     """);
 */
 
-
+print("** show tables **"); 
     db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;').then((value) {
       print(value);
     });
@@ -135,18 +136,12 @@ class DatabaseService {
     );
   }
 
-  static Future<Todo> getItemFromGroup(int groupId) async {
+  static Future<List<Todo>> getItemFromGroup(int groupId) async {
     final db = await DatabaseService.initializeDb();
 
-    final List<Map<String, Object?>> queryResult =
-        await db.query('Todos', where: "group_FK = $groupId");
+    final List<Map<String, Object?>> queryResult = await db.query('Todos', where: "groupId = $groupId");
+    return queryResult.map((e) => Todo.fromMap(e)).toList();
 
-
-    return Todo(
-      id: queryResult[0]["id"] as int,
-      content: queryResult[0]["content"] as String,
-      completed: queryResult[0]["completed"] as int == 1,
-    );
   }
 
   static Future<bool> updateTaskStatue(int id, bool isCompleted) async {
