@@ -41,9 +41,10 @@ class FloatingNewButton extends StatelessWidget {
             TextButton(
               onPressed: () {
                 print(titleFieldController.text);
+                print(descriptionFieldController.text);
 
                 DatabaseService.createItem(
-                        Todo(content: titleFieldController.text))
+                        Todo(content: titleFieldController.text, description: descriptionFieldController.text))
                     .then((value) {
                   onPressed();
                 });

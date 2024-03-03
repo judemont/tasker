@@ -40,7 +40,7 @@ class _TasksWidgetState extends State<TasksWidget> {
         return CheckboxListTile(
           title: Text(widget.items[index].content),
           value: widget.items[index].completed,
-          subtitle: const Text("description"),
+          subtitle: Text(widget.items[index].description ?? ""),
           onChanged: (value) {
             print(value);
             DatabaseService.updateTaskStatue(
