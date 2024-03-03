@@ -11,7 +11,8 @@ class FloatingNewButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _textFieldController = TextEditingController();
+    var _titleFieldController = TextEditingController();
+    var _descriptionFieldController = TextEditingController();
 
     return FloatingActionButton(
       child: const Icon(Icons.add_circle),
@@ -19,10 +20,20 @@ class FloatingNewButton extends StatelessWidget {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("New ToDo"),
-          content: TextField(
-            controller: _textFieldController,
-            decoration:
-                const InputDecoration(hintText: "What do you need to do?"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _titleFieldController,
+                decoration: const InputDecoration(hintText: "Title"),
+              ),
+              TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                controller: _descriptionFieldController,
+                decoration: const InputDecoration(hintText: "Description"),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -31,10 +42,10 @@ class FloatingNewButton extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                print(_textFieldController.text);
+                print(_titleFieldController.text);
 
                 DatabaseService.createItem(
-                        Todo(content: _textFieldController.text))
+                        Todo(content: _titleFieldController.text))
                     .then((value) {
                   onPressed();
                 });
