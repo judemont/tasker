@@ -40,7 +40,10 @@ class _HomePageState extends State<HomePage> {
   
     ),
     floatingActionButton: FloatingNewButton(
-        onPressed: _loadData
+        onPressed: (){
+          _loadTodoFromGroup(selectedGroupId);
+        },
+        groupeId: selectedGroupId,
       ) 
     );
   }

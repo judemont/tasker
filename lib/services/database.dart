@@ -107,7 +107,7 @@ print("** show tables **");
     final db = await DatabaseService.initializeDb();
 
     final id = await db.insert('Todos',
-        Todo(content: todo.content, completed: todo.completed, description: todo.description).toMap());
+        Todo(content: todo.content, completed: todo.completed, description: todo.description, groupId: todo.groupId).toMap());
     return id;
   }
 
