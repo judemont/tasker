@@ -1,15 +1,19 @@
+import 'dart:ffi';
+
 class Todo {
   final int? id;
   bool completed;
   String content;
+  int groupId;
 
-  Todo({this.id, this.completed = false, this.content = ''});
+  Todo({this.id, this.completed = false, this.content = '', this.groupId = 0});
 
   Map<String, Object?> toMap() {
     return {
       'id': id,
       'completed': completed ? 1 : 0,
       'content': content,
+      'groupId': groupId,
     };
   }
 
@@ -18,6 +22,7 @@ class Todo {
       id: map['id'] as int,
       completed: (map['completed'] as int) == 1,
       content: map['content'] as String,
+      groupId: map['groupId'] as int,
     );
   }
 }

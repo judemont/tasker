@@ -15,17 +15,51 @@ class DatabaseService {
     final path = join(databasePath, databaseName);
     print(path);
     return db ??
-        await openDatabase(path, version: 2,
+        await openDatabase(path, version: 3,
             onCreate: (Database db, int version) async {
           await createTables(db);
         }, onUpgrade: (db, oldVersion, newVersion) async {
           await updateTables(db, oldVersion, newVersion);
-        });
+        }, onOpen: (db) async {
+          await openDB(db);
+        },);
           
   }
 
+  static openDB(Database db) {
+    
+    //db.execute("UPDATE Todo SET groupId = 0 WHERE groupId IS NULL");
+    /*
+    print("** rename table **"); 
+        
+        
+        db.execute("DROP TABLE Todos");
 
-  static updateTables(Database db, int oldVersion, int newVersion) {
+    db.execute("""
+      CREATE TABLE Todos(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        content TEXT NOT NULL,
+        completed INT,
+        groupId INT
+      )      
+    """);
+*/
+
+
+    db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;').then((value) {
+      print(value);
+    });
+  }
+  
+
+
+  static updateTables(Database db, int oldVersion, int newVersion) 
+  {
+    print(" DB Version : "+newVersion.toString() );
+    db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;').then((value) {
+      print(value);
+    });
+
     if (oldVersion < newVersion)
     {
       if (oldVersion < 2) // add group table with link on todo 
@@ -36,10 +70,21 @@ class DatabaseService {
                 name TEXT NOT NULL
               )      
             """);
-        db.execute("""ALTER TABLE Todos ADD COLUNM group_FK INTEGER """);
+        db.execute("""ALTER TABLE Todos ADD COLUMN group_FK INT """);
       }
+
+      if (oldVersion < 3) // add default group and rename group_fk
+      {
+        db.execute("ALTER TABLE Todos RENAME COLUMN group_FK TO groupId ");
+/*
+        db.insert("group", Group(name:"Default group").toMap()).then((value) {
+          db.execute("UPDATE Todo SET groupId = "+value.toString()+" WHERE groupId IS NULL");
+        });
+*/
+      } 
     }
   }
+  
 
   static Future<void> createTables(Database database) async {
     await database.execute("""
@@ -136,6 +181,5 @@ print ("Create group ID : "+id.toString());
     return id;
   }
   
-
 
 }
