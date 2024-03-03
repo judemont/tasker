@@ -52,7 +52,6 @@ class _GroupWidgetState extends State<GroupWidget> {
           });
           
         } ,) ,
-      const Text("hidden")
     ],) ;
   }
 

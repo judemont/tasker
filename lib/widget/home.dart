@@ -4,6 +4,7 @@ import 'package:tasker/models/group.dart';
 
 import 'package:tasker/models/todo.dart';
 import 'package:tasker/widget/groupWidget.dart';
+import 'package:tasker/widget/settings.dart';
 import 'package:tasker/widget/tasksWidget.dart';
 import 'package:tasker/services/database.dart';
 
@@ -31,15 +32,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Tasker"),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
           child: Column(
           children: [
             GroupWidget(selectedGroupId : selectedGroupId,groupItems: groups,onListChange:  _loadGroups ,onTodoChange: _loadTodoFromGroup ,),
             TasksWidget(items: items, onListChange: _loadData)
                       ])
-  
-    ),
-    floatingActionButton: FloatingNewButton(
+    
+      ),
+      endDrawer: const Drawer(
+        child: Settings()
+      ),
+      floatingActionButton: FloatingNewButton(
         onPressed: (){
           _loadTodoFromGroup(selectedGroupId);
         },
