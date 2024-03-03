@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tasker/components/buttonNew.dart';
-import 'package:tasker/components/tasksCheckbox.dart';
 import 'package:tasker/models/group.dart';
 
 import 'package:tasker/models/todo.dart';
