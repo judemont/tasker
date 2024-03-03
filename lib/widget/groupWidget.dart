@@ -45,8 +45,8 @@ class _GroupWidgetState extends State<GroupWidget> {
           return DropdownMenuEntry(value: e.id, label: e.name);
         }).toList()
       ),
-        IconButton(iconSize: 32, 
-          icon: const Icon(Icons.add_task),
+        IconButton(iconSize: 52, 
+          icon: const Icon(Icons.add_circle_outline),
           onPressed:() {
             setState(() {
               addGroup();  
