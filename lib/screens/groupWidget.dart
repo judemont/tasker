@@ -6,7 +6,10 @@ import '../services/database.dart';
 
 class GroupWidget extends StatefulWidget {
   final List<Group> groupItems ;
-  const GroupWidget({super.key,required this.groupItems});
+  Function? onListChange;
+  Function? onTodoChange;
+  int? selectedGroupId ;
+  GroupWidget({super.key,this.selectedGroupId,required this.groupItems, this.onListChange, this.onTodoChange});
 
   @override
   State<GroupWidget> createState() => _GroupWidgetState();
@@ -14,14 +17,26 @@ class GroupWidget extends StatefulWidget {
 
 class _GroupWidgetState extends State<GroupWidget> {
   final TextEditingController groupItemControler = TextEditingController();
-  
+  //int selectedGroupID = 0; 
   @override
   Widget build(BuildContext context) {
     print("COUNT-GROUP:${widget.groupItems.length}");
     return Row(
       children: [
      DropdownMenu(
-      
+      initialSelection: widget.selectedGroupId,
+      onSelected: (value) {
+        print("On Selected ");
+
+        setState(() {
+          print ("select value :"+value.toString());
+          
+          widget.selectedGroupId = value ;
+          //widget.onListChange;
+          widget.onTodoChange!(value);  
+        });
+        
+      },
       controller: groupItemControler,
       enableFilter: true,
       requestFocusOnTap: true,
@@ -65,7 +80,8 @@ class _GroupWidgetState extends State<GroupWidget> {
                 DatabaseService.createGroup(
                         Group(name: textFieldController.text))
                     .then((value) {
-                 
+                      widget.onListChange;
+                      widget.onTodoChange;
                 });
 
                 Navigator.pop(context, 'ok');

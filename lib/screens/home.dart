@@ -18,6 +18,9 @@ class _HomePageState extends State<HomePage> {
   List<Todo> items = [];
   List<Group> groups = [];
 
+  int selectedGroupId = 0 ; 
+
+
   @override
   void initState() {
     _loadData();
@@ -26,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Tasker"),
@@ -35,25 +39,44 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
           child: Column(
           children: [
-            GroupWidget(groupItems: groups),
+            GroupWidget(selectedGroupId : selectedGroupId,groupItems: groups,onListChange:  _loadGroups ,onTodoChange: _loadTodoFromGroup ,),
             TasksWidget(items: items, onListChange: _loadData)
                       ])
   
     ),
     floatingActionButton: FloatingNewButton(
         onPressed: _loadData
-      )
+      ) 
     );
   }
 
-  Future<void> _loadData() async {
-    print("UPDATING DATA......");
-    DatabaseService.getGroups().then((result){
+  Future<void> _loadTodoFromGroup(int groupId) async {
+    selectedGroupId = groupId; 
+    print("function  _loadTodoFromGroup");
+    print("function  _loadTodoFromGroup ID:"+selectedGroupId.toString());
+    DatabaseService.getItemFromGroup(selectedGroupId).then((value) {
+       setState(() {
+         print("Todo COUNT:${value.length}");
+        items = value;
+      });
+    });
+  }
+
+  Future<void> _loadGroups() async {
+    print("function  _loadGroups");
+        DatabaseService.getGroups().then((result){
       setState(() {
          print("Group COUNT:${result.length}");
         groups = result;
       });
     } );
+  }
+
+  Future<void> _loadData() async {
+    print("UPDATING DATA......");
+
+    _loadGroups();
+
     DatabaseService.getItems().then((result) {
       setState(() {
          print("Todo COUNT:${result.length}");
