@@ -13,7 +13,7 @@ class FloatingNewButton extends StatelessWidget {
     var descriptionFieldController = TextEditingController();
 
     return FloatingActionButton(
-      child: const Icon(Icons.add_circle),
+      child: const Icon(Icons.add_task),
       onPressed: () => showDialog(
         context: context,
         builder: (context) => AlertDialog(

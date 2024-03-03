@@ -30,7 +30,7 @@ class _GroupWidgetState extends State<GroupWidget> {
             }).toList()),
         IconButton(
           iconSize: 32,
-          icon: const Icon(Icons.add_task),
+          icon: const Icon(Icons.add_circle),
           onPressed: () {
             setState(() {
               addGroup();
