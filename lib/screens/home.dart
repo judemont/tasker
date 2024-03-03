@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tasker/components/buttonNew.dart';
+import 'package:tasker/components/tasksCheckbox.dart';
+import 'package:tasker/models/group.dart';
+
 import 'package:tasker/models/todo.dart';
+import 'package:tasker/screens/groupWidget.dart';
 import 'package:tasker/screens/tasksWidget.dart';
 import 'package:tasker/services/database.dart';
 
@@ -13,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Todo> items = [];
+  List<Group> groups = [];
 
   @override
   void initState() {
@@ -27,13 +32,13 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Tasker"),
         centerTitle: true,
       ),
+
       body: SingleChildScrollView(
           child: Column(
           children: [
-            Text("Salut32"),
+            GroupWidget(groupItems: groups),
             TasksWidget(items: items, onListChange: _loadData)
-            
-          ])
+                      ])
   
     ),
     floatingActionButton: FloatingNewButton(
@@ -43,10 +48,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadData() async {
-    print("UPDATING DATA....");
+    print("UPDATING DATA......");
+    DatabaseService.getGroups().then((result){
+      setState(() {
+         print("Group COUNT:"+result.length.toString());
+        groups = result;
+      });
+    } );
     DatabaseService.getItems().then((result) {
       setState(() {
-         print("COUNT:"+result.length.toString());
+         print("Todo COUNT:"+result.length.toString());
         items = result;
       });
     });
