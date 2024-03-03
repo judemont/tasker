@@ -12,7 +12,7 @@ class Group {
   }
 
   static Group fromMap(Map<String, Object?> map) {
-    print("GROUP-MAP length :"+map.length.toString());
+    print("GROUP-MAP length :${map.length}");
     return Group(
       id: map['id'] as int,
       name: map['name'] as String,

@@ -108,7 +108,7 @@ class DatabaseService {
     final db = await DatabaseService.initializeDb();
 
     final List<Map<String, Object?>> queryResult = await db.query('Todos');
-    return queryResult.map((e) => Todo.fromMap(e)).toList() as List<Todo>;
+    return queryResult.map((e) => Todo.fromMap(e)).toList();
   }
 
 
@@ -174,10 +174,10 @@ class DatabaseService {
 
   static Future<int> createGroup(Group group) async {
     final db = await DatabaseService.initializeDb();
-print("Create group : "+group.name);
+print("Create group : ${group.name}");
     final id = await db.insert('Groups',
         Group(name: group.name).toMap());
-print ("Create group ID : "+id.toString());
+print ("Create group ID : $id");
     return id;
   }
   
