@@ -50,13 +50,13 @@ class _HomePageState extends State<HomePage> {
     print("UPDATING DATA......");
     DatabaseService.getGroups().then((result){
       setState(() {
-         print("Group COUNT:"+result.length.toString());
+         print("Group COUNT:${result.length}");
         groups = result;
       });
     } );
     DatabaseService.getItems().then((result) {
       setState(() {
-         print("Todo COUNT:"+result.length.toString());
+         print("Todo COUNT:${result.length}");
         items = result;
       });
     });

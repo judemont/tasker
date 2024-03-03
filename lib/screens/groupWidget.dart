@@ -17,7 +17,7 @@ class _GroupWidgetState extends State<GroupWidget> {
   
   @override
   Widget build(BuildContext context) {
-    print("COUNT-GROUP:"+widget.groupItems.length.toString());
+    print("COUNT-GROUP:${widget.groupItems.length}");
     return Row(
       children: [
      DropdownMenu(
@@ -25,7 +25,7 @@ class _GroupWidgetState extends State<GroupWidget> {
       controller: groupItemControler,
       enableFilter: true,
       requestFocusOnTap: true,
-      label: Text("Select groupe"),
+      label: const Text("Select groupe"),
       dropdownMenuEntries: widget.groupItems.map((e) {
         return DropdownMenuEntry(value: e.id, label: e.name);
       }).toList()
@@ -38,18 +38,18 @@ class _GroupWidgetState extends State<GroupWidget> {
           });
           
         } ,) ,
-      Text("hidden")
+      const Text("hidden")
     ],) ;
   }
 
 
   addGroup()
   {
-    var _textFieldController = TextEditingController();
+    var textFieldController = TextEditingController();
     showDialog(context: context, builder:  (context) => AlertDialog(
           title: const Text("New Groupe"),
           content: TextField(
-            controller: _textFieldController,
+            controller: textFieldController,
             decoration:
                 const InputDecoration(hintText: "Group name"),
           ),
@@ -60,10 +60,10 @@ class _GroupWidgetState extends State<GroupWidget> {
             ),
             TextButton(
               onPressed: () {
-                print(_textFieldController.text);
+                print(textFieldController.text);
 
                 DatabaseService.createGroup(
-                        Group(name: _textFieldController.text))
+                        Group(name: textFieldController.text))
                     .then((value) {
                  
                 });

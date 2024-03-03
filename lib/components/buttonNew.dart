@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:tasker/models/todo.dart';
-import 'package:tasker/screens/home.dart';
 import 'package:tasker/services/database.dart';
 
 class FloatingNewButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const FloatingNewButton({Key? key, required this.onPressed})
-      : super(key: key);
+  const FloatingNewButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    var _titleFieldController = TextEditingController();
-    var _descriptionFieldController = TextEditingController();
+    var titleFieldController = TextEditingController();
+    var descriptionFieldController = TextEditingController();
 
     return FloatingActionButton(
       child: const Icon(Icons.add_circle),
@@ -24,13 +22,13 @@ class FloatingNewButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: _titleFieldController,
+                controller: titleFieldController,
                 decoration: const InputDecoration(hintText: "Title"),
               ),
               TextField(
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
-                controller: _descriptionFieldController,
+                controller: descriptionFieldController,
                 decoration: const InputDecoration(hintText: "Description"),
               ),
             ],
@@ -42,10 +40,10 @@ class FloatingNewButton extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                print(_titleFieldController.text);
+                print(titleFieldController.text);
 
                 DatabaseService.createItem(
-                        Todo(content: _titleFieldController.text))
+                        Todo(content: titleFieldController.text))
                     .then((value) {
                   onPressed();
                 });
