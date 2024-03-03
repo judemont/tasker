@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   List<Todo> items = [];
   List<Group> groups = [];
 
-  int selectedGroupId = 0 ; 
+  int selectedGroupId = 1; 
 
 
   @override
