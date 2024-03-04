@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _loadGroups();
     _loadTodoFromGroup(selectedGroupId);
     super.initState();
   }
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage> {
     print("function  _loadGroups");
     DatabaseService.getGroups().then((result) {
       setState(() {
+        print("AAAAAAFFFFFA");
         print("Group COUNT:${result.length}");
         groups = result;
       });

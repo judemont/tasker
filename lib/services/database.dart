@@ -15,21 +15,25 @@ class DatabaseService {
     final path = join(databasePath, databaseName);
     print(path);
     return db ??
-        await openDatabase(path, version: 5,
-            onCreate: (Database db, int version) async {
-          await createTables(db);
-        }, onUpgrade: (db, oldVersion, newVersion) async {
-          await updateTables(db, oldVersion, newVersion);
-        }, onOpen: (db) async {
-          await openDB(db);
-        },);
-          
+        await openDatabase(
+          path,
+          version: 5,
+          onCreate: (Database db, int version) async {
+            await createTables(db);
+          },
+          onUpgrade: (db, oldVersion, newVersion) async {
+            await updateTables(db, oldVersion, newVersion);
+          },
+          onOpen: (db) async {
+            await openDB(db);
+          },
+        );
   }
 
   static openDB(Database db) {
-    
     //db.execute("UPDATE Todo SET groupId = 0 WHERE groupId IS NULL");
-    db.execute("UPDATE Todos SET groupId = 1 WHERE groupId is null OR groupId = 0 ");
+    db.execute(
+        "UPDATE Todos SET groupId = 1 WHERE groupId is null OR groupId = 0 ");
     /*
     print("** rename table **"); 
         
@@ -46,24 +50,20 @@ class DatabaseService {
     """);
 */
 
-print("** show tables **"); 
+    print("** show tables **");
     db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;').then((value) {
       print(value);
     });
   }
-  
 
-
-  static updateTables(Database db, int oldVersion, int newVersion) 
-  {
-    print(" DB Version : "+newVersion.toString() );
+  static updateTables(Database db, int oldVersion, int newVersion) {
+    print(" DB Version : " + newVersion.toString());
     db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;').then((value) {
       print(value);
     });
 
-    if (oldVersion < newVersion)
-    {
-      if (oldVersion < 2) // add group table with link on todo 
+    if (oldVersion < newVersion) {
+      if (oldVersion < 2) // add group table with link on todo
       {
         db.execute("""
               CREATE TABLE Groups(
@@ -82,15 +82,14 @@ print("** show tables **");
           db.execute("UPDATE Todo SET groupId = "+value.toString()+" WHERE groupId IS NULL");
         });
 */
-      } 
+      }
 
-            
       if (oldVersion < 4) // add description
       {
         db.execute("""ALTER TABLE Todos ADD COLUMN description TEXT """);
-      } 
+      }
 
-      if (oldVersion < 5) // new Tables 
+      if (oldVersion < 5) // new Tables
       {
         db.execute("DROP TABLE Todos");
         db.execute("DROP TABLE Groups");
@@ -109,28 +108,41 @@ print("** show tables **");
               description TEXT,
               groupId INT
             ) 
-            """);  
+            """);
       }
-
     }
   }
-  
 
   static Future<void> createTables(Database database) async {
     await database.execute("""
       CREATE TABLE Todos(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        content TEXT NOT NULL,
-        completed INT
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          content TEXT NOT NULL,
+          completed INT,
+          description TEXT,
+          groupId INT
       )      
+    """);
+
+    await database.execute("""
+    CREATE TABLE Groups(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL
+    )          
     """);
   }
 
   static Future<int> createItem(Todo todo) async {
     final db = await DatabaseService.initializeDb();
 
-    final id = await db.insert('Todos',
-        Todo(content: todo.content, completed: todo.completed, description: todo.description, groupId: todo.groupId).toMap());
+    final id = await db.insert(
+        'Todos',
+        Todo(
+                content: todo.content,
+                completed: todo.completed,
+                description: todo.description,
+                groupId: todo.groupId)
+            .toMap());
     return id;
   }
 
@@ -140,7 +152,6 @@ print("** show tables **");
     final List<Map<String, Object?>> queryResult = await db.query('Todos');
     return queryResult.map((e) => Todo.fromMap(e)).toList();
   }
-
 
   static Future<Todo> getItem(int id) async {
     final db = await DatabaseService.initializeDb();
@@ -162,9 +173,9 @@ print("** show tables **");
   static Future<List<Todo>> getItemFromGroup(int groupId) async {
     final db = await DatabaseService.initializeDb();
 
-    final List<Map<String, Object?>> queryResult = await db.query('Todos', where: "groupId = $groupId");
+    final List<Map<String, Object?>> queryResult =
+        await db.query('Todos', where: "groupId = $groupId");
     return queryResult.map((e) => Todo.fromMap(e)).toList();
-
   }
 
   static Future<bool> updateTaskStatue(int id, bool isCompleted) async {
@@ -180,6 +191,7 @@ print("** show tables **");
     final db = await DatabaseService.initializeDb();
 
     final List<Map<String, Object?>> queryResult = await db.query('Groups');
+    print("FFFF"+queryResult.length.toString());
     return queryResult.map((e) => Group.fromMap(e)).toList();
   }
 
@@ -189,7 +201,6 @@ print("** show tables **");
     final List<Map<String, Object?>> queryResult =
         await db.query('Groups', where: "id = $id");
 
-
     return Group(
       id: queryResult[0]["id"] as int,
       name: queryResult[0]["name"] as String,
@@ -198,12 +209,9 @@ print("** show tables **");
 
   static Future<int> createGroup(Group group) async {
     final db = await DatabaseService.initializeDb();
-print("Create group : ${group.name}");
-    final id = await db.insert('Groups',
-        Group(name: group.name).toMap());
-print ("Create group ID : $id");
+    print("Create group : ${group.name}");
+    final id = await db.insert('Groups', Group(name: group.name).toMap());
+    print("Create group ID : $id");
     return id;
   }
-  
-
 }
