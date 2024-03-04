@@ -30,14 +30,15 @@ class _GroupWidgetState extends State<GroupWidget> {
       children: [
         DropdownMenu(
             width: MediaQuery.of(context).size.width * 0.5,
-            initialSelection: widget.selectedGroupId,
+            // initialSelection: widget.selectedGroupId,
+            initialSelection: widget.groupItems[0].id,
             onSelected: (value) {
               print("On Selected ");
 
               setState(() {
                 print("select value :" + value.toString());
 
-                widget.selectedGroupId = value;
+                // widget.selectedGroupId = value;
                 //widget.onListChange;
                 widget.onTodoChange!(value);
               });
@@ -82,9 +83,9 @@ class _GroupWidgetState extends State<GroupWidget> {
               print(textFieldController.text);
 
               DatabaseService.createGroup(Group(name: textFieldController.text))
-                  .then((value) {
-                widget.onListChange;
-                widget.onTodoChange;
+              .then((value) {
+                widget.onListChange!();
+                widget.onTodoChange!();
               });
 
               Navigator.pop(context, 'ok');

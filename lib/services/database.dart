@@ -17,7 +17,7 @@ class DatabaseService {
     return db ??
         await openDatabase(
           path,
-          version: 5,
+          version: 6,
           onCreate: (Database db, int version) async {
             await createTables(db);
           },
@@ -61,6 +61,7 @@ class DatabaseService {
     db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;').then((value) {
       print(value);
     });
+
 
     if (oldVersion < newVersion) {
       if (oldVersion < 2) // add group table with link on todo
@@ -110,6 +111,10 @@ class DatabaseService {
             ) 
             """);
       }
+
+      if (oldVersion < 6) {
+        db.insert('Groups', Group(name: "Default").toMap());
+      }
     }
   }
 
@@ -130,6 +135,9 @@ class DatabaseService {
       name TEXT NOT NULL
     )          
     """);
+
+    await database.insert('Groups', Group(name: "Default").toMap());
+
   }
 
   static Future<int> createItem(Todo todo) async {
@@ -191,7 +199,6 @@ class DatabaseService {
     final db = await DatabaseService.initializeDb();
 
     final List<Map<String, Object?>> queryResult = await db.query('Groups');
-    print("FFFF"+queryResult.length.toString());
     return queryResult.map((e) => Group.fromMap(e)).toList();
   }
 

@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
             child: SingleChildScrollView(
                 child: Column(children: [
               GroupWidget(
-                selectedGroupId: selectedGroupId,
+                // selectedGroupId: selectedGroupId,
                 groupItems: groups,
                 onListChange: _loadGroups,
                 onTodoChange: _loadTodoFromGroup,
