@@ -1,4 +1,4 @@
-# Taasker
+# Tasker
 
 
 A fun, user-friendly, powerfull to-do list, built with love and flutter.
