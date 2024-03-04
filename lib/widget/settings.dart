@@ -38,12 +38,15 @@ class _SettingsState extends State<Settings> {
             ),
             Visibility(
               visible: _displayedTabIndex == 1,
-              child: const Column(
-                children: [
-                  ListTile(
-                    title: Text("Option 1"),
-                  ),
-                ],
+              child: Container(
+                margin: const EdgeInsets.only(left: 20),
+                child: const Column(
+                  children: [
+                    ListTile(
+                      title: Text("Import from file"),
+                    ),
+                  ],
+                ),
               ),
             ),
             ListTile(
@@ -55,12 +58,15 @@ class _SettingsState extends State<Settings> {
             ),
             Visibility(
               visible: _displayedTabIndex == 2,
-              child: const Column(
-                children: [
-                  ListTile(
-                    title: Text("Option 2"),
-                  ),
-                ],
+              child: Container(
+                margin: const EdgeInsets.only(left: 20),
+                child: const Column(
+                  children: [
+                    ListTile(
+                      title: Text("Export file"),
+                    ),
+                  ],
+                ),
               ),
             ),
             ListTile(
@@ -72,12 +78,15 @@ class _SettingsState extends State<Settings> {
             ),
             Visibility(
               visible: _displayedTabIndex == 3,
-              child: const Column(
-                children: [
-                  ListTile(
-                    title: Text("Option 3"),
-                  ),
-                ],
+              child: Container(
+                margin: const EdgeInsets.only(left: 20),
+                child: const Column(
+                  children: [
+                    ListTile(
+                      title: Text("This application has been developed with love by Judemont and Rdemont !"),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

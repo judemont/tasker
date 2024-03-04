@@ -4,8 +4,9 @@ import 'package:tasker/services/database.dart';
 
 class FloatingNewButton extends StatelessWidget {
   final VoidCallback onPressed;
-
-  const FloatingNewButton({super.key, required this.onPressed});
+  final int groupeId;
+  const FloatingNewButton(
+      {super.key, required this.onPressed, required this.groupeId});
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +43,12 @@ class FloatingNewButton extends StatelessWidget {
               onPressed: () {
                 print(titleFieldController.text);
                 print(descriptionFieldController.text);
-
-                DatabaseService.createItem(
-                        Todo(content: titleFieldController.text, description: descriptionFieldController.text))
-                    .then((value) {
+                print(groupeId.toString());
+                DatabaseService.createItem(Todo(
+                  content: titleFieldController.text,
+                  description: descriptionFieldController.text,
+                  groupId: groupeId,
+                )).then((value) {
                   onPressed();
                 });
 
