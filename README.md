@@ -1,7 +1,7 @@
 # Tasker
 
 
-A fun, user-friendly, powerfull to-do list, built with love and flutter.
+A fun, user-friendly and powerfull to-do list, built with love and flutter.
 
 ## Run
 ```bash
