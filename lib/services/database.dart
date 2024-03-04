@@ -15,7 +15,7 @@ class DatabaseService {
     final path = join(databasePath, databaseName);
     print(path);
     return db ??
-        await openDatabase(path, version: 4,
+        await openDatabase(path, version: 5,
             onCreate: (Database db, int version) async {
           await createTables(db);
         }, onUpgrade: (db, oldVersion, newVersion) async {
@@ -89,6 +89,29 @@ print("** show tables **");
       {
         db.execute("""ALTER TABLE Todos ADD COLUMN description TEXT """);
       } 
+
+      if (oldVersion < 5) // new Tables 
+      {
+        db.execute("DROP TABLE Todos");
+        db.execute("DROP TABLE Groups");
+        db.execute("""
+              CREATE TABLE Groups(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL
+              )      
+            """);
+
+        db.execute("""
+            CREATE TABLE Todos(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              content TEXT NOT NULL,
+              completed INT,
+              description TEXT,
+              groupId INT
+            ) 
+            """);  
+      }
+
     }
   }
   
