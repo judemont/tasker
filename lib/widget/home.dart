@@ -47,10 +47,12 @@ class _HomePageState extends State<HomePage> {
                 onTodoChange: _loadTodoFromGroup,
               ),
               TasksWidget(
-                  items: items,
-                  onListChange: () {
-                    _loadTodoFromGroup(selectedGroupId);
-                  })
+                items: items,
+                onListChange: () {
+                  _loadTodoFromGroup(selectedGroupId);
+                },
+                removeTask: _removeTask,
+              )
             ]))),
         endDrawer: const Drawer(child: Settings()),
         floatingActionButton: FloatingNewButton(
@@ -84,6 +86,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _removeTask(int taskId) async {
+    print("function  _removeTask");
+    DatabaseService.removeTask(taskId);
+
+    _loadTodoFromGroup(selectedGroupId);
+  }
   // Future<void> _loadData() async {
   //   print("UPDATING DATA......");
 

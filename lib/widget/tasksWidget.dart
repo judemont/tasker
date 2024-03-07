@@ -5,8 +5,10 @@ import 'package:tasker/services/database.dart';
 class TasksWidget extends StatefulWidget {
   final List<Todo> items;
   final Function onListChange;
+  final Function removeTask;
+
   const TasksWidget(
-      {super.key, required this.items, required this.onListChange});
+      {super.key, required this.items, required this.onListChange, required this.removeTask});
 
   @override
   State<TasksWidget> createState() => _TasksWidgetState();
@@ -38,7 +40,7 @@ class _TasksWidgetState extends State<TasksWidget> {
     });
   }
 
-  void showContextMenu(BuildContext context) async {
+  void showContextMenu(BuildContext context, int taskId) async {
     final RenderObject? overlay =
         Overlay.of(context)?.context.findRenderObject();
 
@@ -49,9 +51,10 @@ class _TasksWidgetState extends State<TasksWidget> {
             Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
                 overlay.paintBounds.size.height)),
         items: [
-          const PopupMenuItem(
+          PopupMenuItem(
             value: "delete",
-            child: Text("Delete"),
+            child: const Text("Delete"),
+            onTap: () => widget.removeTask(taskId),
           ),
           const PopupMenuItem(
             value: "rename",
@@ -70,7 +73,7 @@ class _TasksWidgetState extends State<TasksWidget> {
         return GestureDetector(
           onTapDown: (details) => _getTapPosition(details),
           onLongPress: () {
-            showContextMenu(context);
+            showContextMenu(context, widget.items[index].id!);
           },
           child: CheckboxListTile(
             title: Text(widget.items[index].content),

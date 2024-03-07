@@ -1,5 +1,7 @@
 //import 'dart:js_interop';
 
+import 'dart:ffi';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/group.dart';
@@ -220,5 +222,10 @@ class DatabaseService {
     final id = await db.insert('Groups', Group(name: group.name).toMap());
     print("Create group ID : $id");
     return id;
+  }
+
+  static Future<void> removeTask(int taskId) async {
+    final db = await DatabaseService.initializeDb();
+    db.delete("Todos", where: "id = $taskId");
   }
 }
