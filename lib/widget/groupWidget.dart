@@ -29,24 +29,37 @@ class _GroupWidgetState extends State<GroupWidget> {
     print(widget.groupItems);
 
     return Scaffold(
-      body: ListView.builder(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        itemCount: widget.groupItems.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(widget.groupItems[index].name),
-            selected: widget.selectedGroupId == widget.groupItems[index].id,
-            onTap: () {
-              setState(() {
-
-                widget.selectedGroupId = widget.groupItems[index].id;
-                //widget.onListChange;
-                widget.onTodoChange!(widget.groupItems[index].id);
-              });
+      body: Wrap(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 50, bottom: 40, left: 20),
+            child: const Text(
+              "Groups :",
+              style: TextStyle(fontSize: 30),
+            ),
+          ),
+          
+          
+          ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: widget.groupItems.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(widget.groupItems[index].name),
+                selected: widget.selectedGroupId == widget.groupItems[index].id,
+                onTap: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    widget.selectedGroupId = widget.groupItems[index].id;
+                    //widget.onListChange;
+                    widget.onTodoChange!(widget.groupItems[index].id);
+                  });
+                },
+              );
             },
-          );
-        },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add_circle_outline),
