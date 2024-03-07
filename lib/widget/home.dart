@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    print("LLLLLLLLLLL");
     _loadGroups();
     _loadTodoFromGroup(selectedGroupId);
     super.initState();

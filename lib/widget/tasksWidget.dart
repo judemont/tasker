@@ -13,6 +13,7 @@ class TasksWidget extends StatefulWidget {
 }
 
 class _TasksWidgetState extends State<TasksWidget> {
+  Offset _tapPosition = Offset.zero;
 /*
 
   Future<void> _loadData() async {
@@ -30,6 +31,35 @@ class _TasksWidgetState extends State<TasksWidget> {
     super.initState();
   }
 
+  void _getTapPosition(TapDownDetails details) {
+    final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    setState(() {
+      _tapPosition = referenceBox.globalToLocal(details.globalPosition);
+    });
+  }
+
+  void showContextMenu(BuildContext context) async {
+    final RenderObject? overlay =
+        Overlay.of(context)?.context.findRenderObject();
+
+    final result = await showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+            Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 30, 30),
+            Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+                overlay.paintBounds.size.height)),
+        items: [
+          const PopupMenuItem(
+            value: "delete",
+            child: Text("Delete"),
+          ),
+          const PopupMenuItem(
+            value: "rename",
+            child: Text("Rename"),
+          ),
+        ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     print("COUNT2:${widget.items.length}");
@@ -37,47 +67,27 @@ class _TasksWidgetState extends State<TasksWidget> {
       shrinkWrap: true,
       itemCount: widget.items.length,
       itemBuilder: (BuildContext context, int index) {
-        return CheckboxListTile(
-          title: Text(widget.items[index].content),
-          value: widget.items[index].completed,
-          subtitle: Text(widget.items[index].description ?? ""),
-          onChanged: (value) {
-            print("ListBox Value : "+value.toString());
-            DatabaseService.updateTaskStatue(
-                    widget.items[index].id!, widget.items[index].completed)
-                .then((value) {
-              widget.onListChange();
-            });
+        return GestureDetector(
+          onTapDown: (details) => _getTapPosition(details),
+          onLongPress: () {
+            showContextMenu(context);
           },
-          controlAffinity: ListTileControlAffinity.leading,
+          child: CheckboxListTile(
+            title: Text(widget.items[index].content),
+            value: widget.items[index].completed,
+            subtitle: Text(widget.items[index].description ?? ""),
+            onChanged: (value) {
+              print("ListBox Value : " + value.toString());
+              DatabaseService.updateTaskStatue(
+                      widget.items[index].id!, widget.items[index].completed)
+                  .then((value) {
+                widget.onListChange();
+              });
+            },
+            controlAffinity: ListTileControlAffinity.leading,
+          ),
         );
       },
     );
   }
 }
-
-/*
-
-          ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Material(
-              child: CheckboxListTile(
-            title: Text(items[index].content),
-            value: items[index].completed,
-            onChanged: (value) {
-              print(value);
-              DatabaseService.updateTaskStatue(
-                      items[index].id!, items[index].completed)
-                  .then((value) {
-                _loadData();
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-          ));
-        },
-      )),
-      floatingActionButton: FloatingNewButton(
-        onPressed: _loadData,
-      ),
-      */
