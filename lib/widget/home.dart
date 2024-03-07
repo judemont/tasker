@@ -31,21 +31,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Tasker"),
+          title: Text("Tasker : ${groups.firstWhere((group) => group.id == selectedGroupId).name}"),
           centerTitle: true,
         ),
         body: Container(
             margin: EdgeInsets.only(left: 30),
             child: SingleChildScrollView(
                 child: Column(children: [
-              GroupWidget(
-                // selectedGroupId: selectedGroupId,
-                groupItems: groups,
-                onListChange: _loadGroups,
-                onTodoChange: _loadTodoFromGroup,
-              ),
               TasksWidget(
                 items: items,
                 onListChange: () {
@@ -55,6 +50,13 @@ class _HomePageState extends State<HomePage> {
               )
             ]))),
         endDrawer: const Drawer(child: Settings()),
+        drawer: Drawer(
+            child: GroupWidget(
+          selectedGroupId: selectedGroupId,
+          groupItems: groups,
+          onListChange: _loadGroups,
+          onTodoChange: _loadTodoFromGroup,
+        )),
         floatingActionButton: FloatingNewButton(
           onPressed: () {
             _loadTodoFromGroup(selectedGroupId);

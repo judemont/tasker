@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tasker/models/group.dart';
-
 import '../services/database.dart';
 
 class GroupWidget extends StatefulWidget {
@@ -8,67 +7,63 @@ class GroupWidget extends StatefulWidget {
   Function? onListChange;
   Function? onTodoChange;
   int? selectedGroupId;
-  GroupWidget(
-      {super.key,
-      this.selectedGroupId,
-      required this.groupItems,
-      this.onListChange,
-      this.onTodoChange});
+
+  GroupWidget({
+    Key? key,
+    this.selectedGroupId,
+    required this.groupItems,
+    this.onListChange,
+    this.onTodoChange,
+  }) : super(key: key);
 
   @override
   State<GroupWidget> createState() => _GroupWidgetState();
 }
 
 class _GroupWidgetState extends State<GroupWidget> {
-  final TextEditingController groupItemControler = TextEditingController();
-  //int selectedGroupID = 0;
+  final TextEditingController groupItemController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    print("COUNT-GROUP:${widget.groupItems.length}");
+    print("COUNT-GROUP: ${widget.groupItems.length}");
     print(widget.groupItems);
-    return Row(
-      children: [
-        DropdownMenu(
-            width: MediaQuery.of(context).size.width * 0.5,
-            // initialSelection: widget.selectedGroupId,
-            initialSelection: widget.groupItems[0].id,
-            onSelected: (value) {
-              print("On Selected ");
 
+    return Scaffold(
+      body: ListView.builder(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        itemCount: widget.groupItems.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text(widget.groupItems[index].name),
+            selected: widget.selectedGroupId == widget.groupItems[index].id,
+            onTap: () {
               setState(() {
-                print("select value :" + value.toString());
 
-                // widget.selectedGroupId = value;
+                widget.selectedGroupId = widget.groupItems[index].id;
                 //widget.onListChange;
-                widget.onTodoChange!(value);
+                widget.onTodoChange!(widget.groupItems[index].id);
               });
             },
-            controller: groupItemControler,
-            enableFilter: true,
-            requestFocusOnTap: true,
-            label: const Text("Select groupe"),
-            dropdownMenuEntries: widget.groupItems.map((e) {
-              return DropdownMenuEntry(value: e.id, label: e.name);
-            }).toList()),
-        IconButton(
-          iconSize: 52,
-          icon: const Icon(Icons.add_circle_outline),
-          onPressed: () {
-            setState(() {
-              addGroup();
-            });
-          },
-        ),
-      ],
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add_circle_outline),
+        onPressed: () {
+          addGroup();
+        },
+      ),
     );
   }
 
   addGroup() {
     var textFieldController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("New Groupe"),
+        title: const Text("New Group"),
         content: TextField(
           controller: textFieldController,
           decoration: const InputDecoration(hintText: "Group name"),
@@ -83,12 +78,12 @@ class _GroupWidgetState extends State<GroupWidget> {
               print(textFieldController.text);
 
               DatabaseService.createGroup(Group(name: textFieldController.text))
-              .then((value) {
+                  .then((value) {
                 widget.onListChange!();
                 widget.onTodoChange!();
               });
 
-              Navigator.pop(context, 'ok');
+              Navigator.pop(context, 'OK');
             },
             child: const Text('OK'),
           ),
