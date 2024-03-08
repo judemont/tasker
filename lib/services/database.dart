@@ -228,4 +228,9 @@ class DatabaseService {
     final db = await DatabaseService.initializeDb();
     db.delete("Todos", where: "id = $taskId");
   }
+
+  static Future<void> removeGroup(int groupId) async {
+    final db = await DatabaseService.initializeDb();
+    db.delete("Groups", where: "id = $groupId");
+  }
 }

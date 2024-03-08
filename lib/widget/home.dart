@@ -31,10 +31,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
-          title: Text("Tasker : ${groups.firstWhere((group) => group.id == selectedGroupId).name}"),
+          title: Text(
+              "Tasker : ${groups.firstWhere((group) => group.id == selectedGroupId).name}"),
           centerTitle: true,
         ),
         body: Container(
@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
         endDrawer: const Drawer(child: Settings()),
         drawer: Drawer(
             child: GroupWidget(
+          removeGroup: _removeGroup,
           selectedGroupId: selectedGroupId,
           groupItems: groups,
           onListChange: _loadGroups,
@@ -94,16 +95,12 @@ class _HomePageState extends State<HomePage> {
 
     _loadTodoFromGroup(selectedGroupId);
   }
-  // Future<void> _loadData() async {
-  //   print("UPDATING DATA......");
 
-  //   _loadGroups();
+  Future<void> _removeGroup(int groupId) async {
+    DatabaseService.removeGroup(groupId);
 
-  //   DatabaseService.getItems().then((result) {
-  //     setState(() {
-  //        print("Todo COUNT:${result.length}");
-  //       items = result;
-  //     });
-  //   });
-  // }
+    _loadGroups();
+    selectedGroupId = 1;
+    _loadTodoFromGroup(selectedGroupId);
+  }
 }
