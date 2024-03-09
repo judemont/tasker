@@ -8,7 +8,10 @@ class TasksWidget extends StatefulWidget {
   final Function removeTask;
 
   const TasksWidget(
-      {super.key, required this.items, required this.onListChange, required this.removeTask});
+      {super.key,
+      required this.items,
+      required this.onListChange,
+      required this.removeTask});
 
   @override
   State<TasksWidget> createState() => _TasksWidgetState();
@@ -54,7 +57,10 @@ class _TasksWidgetState extends State<TasksWidget> {
           PopupMenuItem(
             value: "delete",
             child: const Text("Delete"),
-            onTap: () => widget.removeTask(taskId),
+            onTap: () {
+              widget.removeTask(taskId);
+              widget.onListChange();
+            },
           ),
           const PopupMenuItem(
             value: "rename",

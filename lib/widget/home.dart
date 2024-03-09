@@ -94,15 +94,15 @@ class _HomePageState extends State<HomePage> {
   Future<void> _removeTask(int taskId) async {
     print("function  _removeTask");
     DatabaseService.removeTask(taskId);
-
-    _loadTodoFromGroup(selectedGroupId);
   }
+
+  Future<void> _removeTaskFromGroup(int groupId) async {
+    print("function  _removeTaskFromGroup");
+    DatabaseService.removeTasksFromGroup(groupId);
+  }
+
 
   Future<void> _removeGroup(int groupId) async {
     DatabaseService.removeGroup(groupId);
-
-    _loadGroups();
-    selectedGroupId = 1;
-    _loadTodoFromGroup(selectedGroupId);
   }
 }

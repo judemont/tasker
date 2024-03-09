@@ -4,19 +4,19 @@ import '../services/database.dart';
 
 class GroupWidget extends StatefulWidget {
   final List<Group> groupItems;
-  Function? onListChange;
-  Function? onTodoChange;
+  Function onListChange;
+  Function onTodoChange;
   int? selectedGroupId;
   final Function removeGroup;
 
-  GroupWidget({
-    Key? key,
-    this.selectedGroupId,
-    required this.groupItems,
-    required this.onListChange,
-    required this.onTodoChange,
-    required this.removeGroup
-  }) : super(key: key);
+  GroupWidget(
+      {Key? key,
+      required this.selectedGroupId,
+      required this.groupItems,
+      required this.onListChange,
+      required this.onTodoChange,
+      required this.removeGroup})
+      : super(key: key);
 
   @override
   State<GroupWidget> createState() => _GroupWidgetState();
@@ -25,7 +25,6 @@ class GroupWidget extends StatefulWidget {
 class _GroupWidgetState extends State<GroupWidget> {
   final TextEditingController groupItemController = TextEditingController();
   Offset _tapPosition = Offset.zero;
-
 
   void _getTapPosition(TapDownDetails details) {
     final RenderBox referenceBox = context.findRenderObject() as RenderBox;
@@ -36,9 +35,9 @@ class _GroupWidgetState extends State<GroupWidget> {
 
   void showContextMenu(BuildContext context, int taskId) async {
     final RenderObject? overlay =
-        Overlay.of(context)?.context.findRenderObject();
+        Overlay.of(context).context.findRenderObject();
 
-    final result = await showMenu(
+    showMenu(
         context: context,
         position: RelativeRect.fromRect(
             Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 30, 30),
@@ -48,7 +47,12 @@ class _GroupWidgetState extends State<GroupWidget> {
           PopupMenuItem(
             value: "delete",
             child: const Text("Delete"),
-            onTap: () => widget.removeGroup(taskId),
+            onTap: () {
+              widget.selectedGroupId = 1;
+              widget.removeGroup(taskId);
+              widget.onTodoChange(widget.selectedGroupId);
+              widget.onListChange();
+            },
           ),
           const PopupMenuItem(
             value: "rename",
@@ -84,16 +88,17 @@ class _GroupWidgetState extends State<GroupWidget> {
                 },
                 child: ListTile(
                   title: Text(widget.groupItems[index].name),
-                  selected: widget.selectedGroupId == widget.groupItems[index].id,
+                  selected:
+                      widget.selectedGroupId == widget.groupItems[index].id,
                   onTap: () {
                     Navigator.pop(context);
                     setState(() {
                       widget.selectedGroupId = widget.groupItems[index].id;
                       //widget.onListChange;
-                      widget.onTodoChange!(widget.groupItems[index].id);
+                      widget.onTodoChange(widget.groupItems[index].id);
                     });
                   },
-                )      ,
+                ),
               );
             },
           ),
@@ -130,8 +135,8 @@ class _GroupWidgetState extends State<GroupWidget> {
 
               DatabaseService.createGroup(Group(name: textFieldController.text))
                   .then((value) {
-                widget.onListChange!();
-                widget.onTodoChange!();
+                widget.onListChange();
+                widget.onTodoChange();
               });
 
               Navigator.pop(context, 'OK');
