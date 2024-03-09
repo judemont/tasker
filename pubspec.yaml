@@ -41,6 +41,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.20
 
   path: any
+  url_launcher: ^6.2.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

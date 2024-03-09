@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
 
 class Settings extends StatefulWidget {
   const Settings({Key? key});
@@ -80,11 +83,20 @@ class _SettingsState extends State<Settings> {
               visible: _displayedTabIndex == 3,
               child: Container(
                 margin: const EdgeInsets.only(left: 20),
-                child: const Column(
+                child: Column(
                   children: [
-                    ListTile(
-                      title: Text("This application has been developed with love by Judemont and Rdemont !"),
+                    const ListTile(
+                      title: Text("Tasker is an open source, simple, offline, privacy friendly To-Do app developed with love by Judemont and Rdemont"),
                     ),
+                    ListTile(
+                      title: const Text(
+                        "Source code (GitHub)",
+                        style: TextStyle(
+                          color: Colors.blue
+                        ),
+                      ),
+                      onTap: () => launchUrl(Uri.parse('https://github.com/judemont/tasker')),
+                    )
                   ],
                 ),
               ),
