@@ -72,7 +72,6 @@ class _HomePageState extends State<HomePage> {
     print("function  _loadTodoFromGroup ID:" + selectedGroupId.toString());
 
     DatabaseService.getItemFromGroup(selectedGroupId).then((value) {
-      value.sort((a, b) => a.completed ? 1 : 0.compareTo(b.completed ? 1 : 0));
       setState(() {
         print("Todo COUNT:${value.length}");
         items = value;

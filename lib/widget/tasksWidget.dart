@@ -19,6 +19,7 @@ class TasksWidget extends StatefulWidget {
 
 class _TasksWidgetState extends State<TasksWidget> {
   Offset _tapPosition = Offset.zero;
+  bool displayCompletedTasks = false;
 /*
 
   Future<void> _loadData() async {
@@ -72,31 +73,47 @@ class _TasksWidgetState extends State<TasksWidget> {
   @override
   Widget build(BuildContext context) {
     print("COUNT2:${widget.items.length}");
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: widget.items.length,
-      itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          onTapDown: (details) => _getTapPosition(details),
-          onLongPress: () {
-            showContextMenu(context, widget.items[index].id!);
+    return Wrap(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.items.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTapDown: (details) => _getTapPosition(details),
+              onLongPress: () {
+                showContextMenu(context, widget.items[index].id!);
+              },
+              child: Visibility(
+                visible: displayCompletedTasks || !widget.items[index].completed,
+                child: CheckboxListTile(
+                  title: Text(widget.items[index].content),
+                  value: widget.items[index].completed,
+                  subtitle: Text(widget.items[index].description ?? ""),
+                  onChanged: (value) {
+                    print("ListBox Value : " + value.toString());
+                    DatabaseService.updateTaskStatue(widget.items[index].id!,
+                            widget.items[index].completed)
+                        .then((value) {
+                      widget.onListChange();
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+              )
+            );
           },
-          child: CheckboxListTile(
-            title: Text(widget.items[index].content),
-            value: widget.items[index].completed,
-            subtitle: Text(widget.items[index].description ?? ""),
-            onChanged: (value) {
-              print("ListBox Value : " + value.toString());
-              DatabaseService.updateTaskStatue(
-                      widget.items[index].id!, widget.items[index].completed)
-                  .then((value) {
-                widget.onListChange();
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-          ),
-        );
-      },
+        ),
+        SwitchListTile(
+          title: Text("Display completed task"),
+          value: displayCompletedTasks,
+          onChanged: (bool value)  {
+            setState(() {
+              displayCompletedTasks = value;
+            });
+          }
+        )
+      ],
     );
   }
 }
