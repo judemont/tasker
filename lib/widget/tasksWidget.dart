@@ -41,7 +41,8 @@ class _TasksWidgetState extends State<TasksWidget> {
 
   void showContextMenu(BuildContext context, Todo todo) async {
     renameTitleFieldController = TextEditingController(text: todo.content);
-    renameDescriptionFieldController = TextEditingController(text: todo.description);
+    renameDescriptionFieldController =
+        TextEditingController(text: todo.description);
 
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
@@ -93,11 +94,8 @@ class _TasksWidgetState extends State<TasksWidget> {
                     ),
                     TextButton(
                       onPressed: () {
-                        widget.renameTask(
-                          todo,
-                          renameTitleFieldController.text,
-                          renameDescriptionFieldController.text
-                        );
+                        widget.renameTask(todo, renameTitleFieldController.text,
+                            renameDescriptionFieldController.text);
                         widget.onListChange();
                         Navigator.pop(context, "ok");
                       },
@@ -120,29 +118,52 @@ class _TasksWidgetState extends State<TasksWidget> {
           shrinkWrap: true,
           itemCount: widget.items.length,
           itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-                onTapDown: (details) => _getTapPosition(details),
-                onLongPress: () {
-                  showContextMenu(context, widget.items[index]);
+            return Dismissible(
+                confirmDismiss: (direction) async {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Description"),
+                      content: Text(widget.items[index].description!),
+                      actions: [
+                        TextButton(
+                          onPressed:() => Navigator.pop(context, "ok"),
+                          child: Text("OK")
+                        )
+                      ],
+                    )
+                  );
+
+                  return false;
                 },
-                child: Visibility(
-                  visible:
-                      displayCompletedTasks || !widget.items[index].completed,
-                  child: CheckboxListTile(
-                    title: Text(widget.items[index].content),
-                    value: widget.items[index].completed,
-                    subtitle: Text(widget.items[index].description ?? ""),
-                    onChanged: (value) {
-                      print("ListBox Value : " + value.toString());
-                      DatabaseService.updateTaskStatue(widget.items[index].id!,
-                              widget.items[index].completed)
-                          .then((value) {
-                        widget.onListChange();
-                      });
+                background: Container(
+                  color: Colors.blue,
+                ),
+                direction: DismissDirection.endToStart,
+                key: UniqueKey(),
+                child: GestureDetector(
+                    onTapDown: (details) => _getTapPosition(details),
+                    onLongPress: () {
+                      showContextMenu(context, widget.items[index]);
                     },
-                    controlAffinity: ListTileControlAffinity.leading,
-                  ),
-                ));
+                    child: Visibility(
+                      visible: displayCompletedTasks ||
+                          !widget.items[index].completed,
+                      child: CheckboxListTile(
+                        title: Text(widget.items[index].content),
+                        value: widget.items[index].completed,
+                        onChanged: (value) {
+                          print("ListBox Value : " + value.toString());
+                          DatabaseService.updateTaskStatue(
+                                  widget.items[index].id!,
+                                  widget.items[index].completed)
+                              .then((value) {
+                            widget.onListChange();
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    )));
           },
         ),
         SwitchListTile(
