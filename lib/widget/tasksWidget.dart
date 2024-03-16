@@ -6,12 +6,14 @@ class TasksWidget extends StatefulWidget {
   final List<Todo> items;
   final Function onListChange;
   final Function removeTask;
+  final Function renameTask;
 
   const TasksWidget(
       {super.key,
       required this.items,
       required this.onListChange,
-      required this.removeTask});
+      required this.removeTask,
+      required this.renameTask});
 
   @override
   State<TasksWidget> createState() => _TasksWidgetState();
@@ -20,17 +22,10 @@ class TasksWidget extends StatefulWidget {
 class _TasksWidgetState extends State<TasksWidget> {
   Offset _tapPosition = Offset.zero;
   bool displayCompletedTasks = false;
-/*
 
-  Future<void> _loadData() async {
-    print("UPDATING DATA....");
-    DatabaseService.getItems().then((result) {
-      setState(() {
-        widget.items = result;
-      });
-    });
-  }
-*/
+  var renameTitleFieldController = TextEditingController();
+  var renameDescriptionFieldController = TextEditingController();
+
   @override
   void initState() {
     //_loadData();
@@ -44,11 +39,14 @@ class _TasksWidgetState extends State<TasksWidget> {
     });
   }
 
-  void showContextMenu(BuildContext context, int taskId) async {
-    final RenderObject? overlay =
-        Overlay.of(context)?.context.findRenderObject();
+  void showContextMenu(BuildContext context, Todo todo) async {
+    renameTitleFieldController = TextEditingController(text: todo.content);
+    renameDescriptionFieldController = TextEditingController(text: todo.description);
 
-    final result = await showMenu(
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+
+    showMenu(
         context: context,
         position: RelativeRect.fromRect(
             Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 30, 30),
@@ -59,13 +57,56 @@ class _TasksWidgetState extends State<TasksWidget> {
             value: "delete",
             child: const Text("Delete"),
             onTap: () {
-              widget.removeTask(taskId);
+              widget.removeTask(todo.id);
               widget.onListChange();
             },
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: "rename",
-            child: Text("Rename"),
+            child: Text("Edit"),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Edit"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: renameTitleFieldController,
+                        decoration:
+                            const InputDecoration(hintText: "New Title"),
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: renameDescriptionFieldController,
+                        decoration:
+                            const InputDecoration(hintText: "New Description"),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        widget.renameTask(
+                          todo,
+                          renameTitleFieldController.text,
+                          renameDescriptionFieldController.text
+                        );
+                        widget.onListChange();
+                        Navigator.pop(context, "ok");
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ]);
   }
@@ -80,39 +121,38 @@ class _TasksWidgetState extends State<TasksWidget> {
           itemCount: widget.items.length,
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
-              onTapDown: (details) => _getTapPosition(details),
-              onLongPress: () {
-                showContextMenu(context, widget.items[index].id!);
-              },
-              child: Visibility(
-                visible: displayCompletedTasks || !widget.items[index].completed,
-                child: CheckboxListTile(
-                  title: Text(widget.items[index].content),
-                  value: widget.items[index].completed,
-                  subtitle: Text(widget.items[index].description ?? ""),
-                  onChanged: (value) {
-                    print("ListBox Value : " + value.toString());
-                    DatabaseService.updateTaskStatue(widget.items[index].id!,
-                            widget.items[index].completed)
-                        .then((value) {
-                      widget.onListChange();
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                ),
-              )
-            );
+                onTapDown: (details) => _getTapPosition(details),
+                onLongPress: () {
+                  showContextMenu(context, widget.items[index]);
+                },
+                child: Visibility(
+                  visible:
+                      displayCompletedTasks || !widget.items[index].completed,
+                  child: CheckboxListTile(
+                    title: Text(widget.items[index].content),
+                    value: widget.items[index].completed,
+                    subtitle: Text(widget.items[index].description ?? ""),
+                    onChanged: (value) {
+                      print("ListBox Value : " + value.toString());
+                      DatabaseService.updateTaskStatue(widget.items[index].id!,
+                              widget.items[index].completed)
+                          .then((value) {
+                        widget.onListChange();
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ));
           },
         ),
         SwitchListTile(
-          title: Text("Display completed task"),
-          value: displayCompletedTasks,
-          onChanged: (bool value)  {
-            setState(() {
-              displayCompletedTasks = value;
-            });
-          }
-        )
+            title: Text("Display completed task"),
+            value: displayCompletedTasks,
+            onChanged: (bool value) {
+              setState(() {
+                displayCompletedTasks = value;
+              });
+            })
       ],
     );
   }

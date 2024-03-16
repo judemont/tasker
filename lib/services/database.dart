@@ -238,4 +238,9 @@ class DatabaseService {
     final db = await DatabaseService.initializeDb();
     db.delete("Todos", where: "groupId = $groupId");
   }
+
+  static Future<void> updateTask(Todo todo) async {
+    final db = await DatabaseService.initializeDb();
+    db.update("Todos", todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
+  }
 }

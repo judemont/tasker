@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
                   _loadTodoFromGroup(selectedGroupId);
                 },
                 removeTask: _removeTask,
+                renameTask: renameTask,
               )
             ]))),
         endDrawer: const Drawer(child: Settings()),
@@ -100,8 +101,13 @@ class _HomePageState extends State<HomePage> {
     DatabaseService.removeTasksFromGroup(groupId);
   }
 
-
   Future<void> _removeGroup(int groupId) async {
     DatabaseService.removeGroup(groupId);
+  }
+
+  Future<void> renameTask(Todo todo, String newName, String newDescription) async {
+    todo.content = newName;
+    todo.description = newDescription;
+    DatabaseService.updateTask(todo);
   }
 }
