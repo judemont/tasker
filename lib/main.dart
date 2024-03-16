@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tasker/widget/home.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:tasker/widget/settings.dart';
 
 Future<void> main() async {
   sqfliteFfiInit();

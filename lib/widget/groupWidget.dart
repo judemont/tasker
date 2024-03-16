@@ -10,13 +10,12 @@ class GroupWidget extends StatefulWidget {
   final Function removeGroup;
 
   GroupWidget(
-      {Key? key,
+      {super.key,
       required this.selectedGroupId,
       required this.groupItems,
       required this.onListChange,
       required this.onTodoChange,
-      required this.removeGroup})
-      : super(key: key);
+      required this.removeGroup});
 
   @override
   State<GroupWidget> createState() => _GroupWidgetState();
@@ -105,7 +104,7 @@ class _GroupWidgetState extends State<GroupWidget> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_circle_outline),
+        child: const Icon(Icons.add_circle_outline),
         onPressed: () {
           addGroup();
         },

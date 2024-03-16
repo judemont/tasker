@@ -1,6 +1,5 @@
 //import 'dart:js_interop';
 
-import 'dart:ffi';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -59,7 +58,7 @@ class DatabaseService {
   }
 
   static updateTables(Database db, int oldVersion, int newVersion) {
-    print(" DB Version : " + newVersion.toString());
+    print(" DB Version : $newVersion");
     db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;').then((value) {
       print(value);
     });

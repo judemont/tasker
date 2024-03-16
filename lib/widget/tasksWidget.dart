@@ -64,7 +64,7 @@ class _TasksWidgetState extends State<TasksWidget> {
           ),
           PopupMenuItem(
             value: "rename",
-            child: Text("Edit"),
+            child: const Text("Edit"),
             onTap: () {
               showDialog(
                 context: context,
@@ -123,12 +123,12 @@ class _TasksWidgetState extends State<TasksWidget> {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text("Description"),
+                      title: const Text("Description"),
                       content: Text(widget.items[index].description!),
                       actions: [
                         TextButton(
                           onPressed:() => Navigator.pop(context, "ok"),
-                          child: Text("OK")
+                          child: const Text("OK")
                         )
                       ],
                     )
@@ -153,7 +153,7 @@ class _TasksWidgetState extends State<TasksWidget> {
                         title: Text(widget.items[index].content),
                         value: widget.items[index].completed,
                         onChanged: (value) {
-                          print("ListBox Value : " + value.toString());
+                          print("ListBox Value : $value");
                           DatabaseService.updateTaskStatue(
                                   widget.items[index].id!,
                                   widget.items[index].completed)
@@ -167,7 +167,7 @@ class _TasksWidgetState extends State<TasksWidget> {
           },
         ),
         SwitchListTile(
-            title: Text("Display completed task"),
+            title: const Text("Display completed task"),
             value: displayCompletedTasks,
             onChanged: (bool value) {
               setState(() {

@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
         ),
         body: Container(
-            margin: EdgeInsets.only(left: 30),
+            margin: const EdgeInsets.only(left: 30),
             child: SingleChildScrollView(
                 child: Column(children: [
               TasksWidget(
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadTodoFromGroup(int groupId) async {
     selectedGroupId = groupId;
     print("function  _loadTodoFromGroup");
-    print("function  _loadTodoFromGroup ID:" + selectedGroupId.toString());
+    print("function  _loadTodoFromGroup ID:$selectedGroupId");
 
     DatabaseService.getItemFromGroup(selectedGroupId).then((value) {
       setState(() {
