@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "jdm.apps.tasker" "\0"
+            VALUE "CompanyName", "jdm.apps.tasker.tasker" "\0"
             VALUE "FileDescription", "tasker" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "tasker" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 jdm.apps.tasker. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 jdm.apps.tasker.tasker. All rights reserved." "\0"
             VALUE "OriginalFilename", "tasker.exe" "\0"
             VALUE "ProductName", "tasker" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

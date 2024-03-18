@@ -11,4 +11,4 @@ PRODUCT_NAME = tasker
 PRODUCT_BUNDLE_IDENTIFIER = jdm.apps.tasker.tasker
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 jdm.apps.tasker. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 jdm.apps.tasker.tasker. All rights reserved.
