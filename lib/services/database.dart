@@ -6,10 +6,20 @@ import 'package:path/path.dart';
 import '../models/group.dart';
 import '../models/todo.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:encrypt/encrypt.dart' as encrypt ;
+import 'dart:convert' as convert;
+
 
 class DatabaseService {
   static const String databaseName = "database.sqlite";
   static Database? db;
+
+  static const DATABASE_VERSION = 6;
+  List<String> tables =[
+   
+  ];
+
+  static const SECRET_KEY = "2021_PRIVATE_KEY_ENCRYPT_2021";
 
   static Future<Database> initializeDb() async {
     final databasePath = (await getApplicationDocumentsDirectory()).path;
@@ -18,7 +28,7 @@ class DatabaseService {
     return db ??
         await openDatabase(
           path,
-          version: 6,
+          version: DATABASE_VERSION,
           onCreate: (Database db, int version) async {
             await createTables(db);
           },
@@ -242,4 +252,72 @@ class DatabaseService {
     final db = await DatabaseService.initializeDb();
     db.update("Todos", todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
   }
+
+
+
+    Future<String>generateBackup({bool isEncrypted = false}) async {
+
+    print('GENERATE BACKUP');
+   
+    var dbs = await DatabaseService.initializeDb();
+
+    List data =[];
+
+    List<Map<String,dynamic>> listMaps=[];
+
+    for (var i = 0; i < tables.length; i++)
+    {
+
+      listMaps = await dbs.query(tables[i]); 
+
+      data.add(listMaps);
+
+    }
+
+    List backups=[tables,data];
+
+    String json = convert.jsonEncode(backups);
+
+    if(isEncrypted)
+    {
+
+      var key = encrypt.Key.fromUtf8(SECRET_KEY);
+      var iv = encrypt.IV.fromLength(16);
+      var encrypter = encrypt.Encrypter(encrypt.AES(key));
+      var encrypted = encrypter.encrypt(json, iv: iv);
+        
+      return encrypted.base64;  
+    }
+    else
+    {
+      return json;
+    }
+  }
+
+  Future<void>restoreBackup(String backup,{ bool isEncrypted = false}) async {
+
+    var dbs = await DatabaseService.initializeDb();
+    
+    Batch batch = dbs.batch();
+    
+    var key = encrypt.Key.fromUtf8(SECRET_KEY);
+    var iv = encrypt.IV.fromLength(16);
+    var encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+    List json = convert.jsonDecode(isEncrypted ? encrypter.decrypt64(backup,iv:iv):backup);
+
+    for (var i = 0; i < json[0].length; i++)
+    {
+      for (var k = 0; k < json[1][i].length; k++)
+      {
+        batch.insert(json[0][i],json[1][i][k]);
+      }
+    }
+
+    await batch.commit(continueOnError:false,noResult:true);
+
+    print('RESTORE BACKUP');
+  }
+
 }
+
