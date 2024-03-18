@@ -32,82 +32,48 @@ class _TasksWidgetState extends State<TasksWidget> {
     super.initState();
   }
 
-  void _getTapPosition(TapDownDetails details) {
-    final RenderBox referenceBox = context.findRenderObject() as RenderBox;
-    setState(() {
-      _tapPosition = referenceBox.globalToLocal(details.globalPosition);
-    });
-  }
-
-  void showContextMenu(BuildContext context, Todo todo) async {
+  Future<void> showRenameDialog(Todo todo) async {
     renameTitleFieldController = TextEditingController(text: todo.content);
     renameDescriptionFieldController =
         TextEditingController(text: todo.description);
-
-    final RenderObject? overlay =
-        Overlay.of(context).context.findRenderObject();
-
-    showMenu(
+    showDialog(
         context: context,
-        position: RelativeRect.fromRect(
-            Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 30, 30),
-            Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
-                overlay.paintBounds.size.height)),
-        items: [
-          PopupMenuItem(
-            value: "delete",
-            child: const Text("Delete"),
-            onTap: () {
-              widget.removeTask(todo.id);
-              widget.onListChange();
-            },
-          ),
-          PopupMenuItem(
-            value: "rename",
-            child: const Text("Edit"),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Edit"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: renameTitleFieldController,
-                        decoration:
-                            const InputDecoration(hintText: "New Title"),
-                      ),
-                      TextField(
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        controller: renameDescriptionFieldController,
-                        decoration:
-                            const InputDecoration(hintText: "New Description"),
-                      ),
-                    ],
+        builder: (context) => AlertDialog(
+              title: const Text("Edit"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: renameTitleFieldController,
+                    decoration: const InputDecoration(hintText: "New Title"),
                   ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'Cancel'),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        widget.renameTask(todo, renameTitleFieldController.text,
-                            renameDescriptionFieldController.text);
-                        widget.onListChange();
-                        Navigator.pop(context, "ok");
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
+                  TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    controller: renameDescriptionFieldController,
+                    decoration:
+                        const InputDecoration(hintText: "New Description"),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                  child: const Text('Cancel'),
                 ),
-              );
-            },
-          ),
-        ]);
+                TextButton(
+                  onPressed: () {
+                    widget.renameTask(todo, renameTitleFieldController.text,
+                        renameDescriptionFieldController.text);
+                    widget.onListChange();
+                    Navigator.pop(context, "ok");
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,51 +85,53 @@ class _TasksWidgetState extends State<TasksWidget> {
           itemCount: widget.items.length,
           itemBuilder: (BuildContext context, int index) {
             return Dismissible(
-                confirmDismiss: (direction) async {
-                  showDialog(
+              confirmDismiss: (direction) async {
+                showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text("Description"),
-                      content: Text(widget.items[index].description!),
-                      actions: [
-                        TextButton(
-                          onPressed:() => Navigator.pop(context, "ok"),
-                          child: const Text("OK")
-                        )
-                      ],
-                    )
-                  );
+                          title: Text(widget.items[index].content),
+                          content: Text(widget.items[index].description!),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  widget.removeTask(widget.items[index].id);
+                                  widget.onListChange();
+                                  Navigator.pop(context, true);
+                                },
+                                child: const Text("Delete")),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                  showRenameDialog(widget.items[index]);
+                                },
+                                child: const Text("Edit")),
+                            TextButton(
+                                onPressed: () => Navigator.pop(context, "ok"),
+                                child: const Text("OK")),
+                          ],
+                        ));
 
-                  return false;
+                return false;
+              },
+              background: Container(
+                color: Colors.blue,
+              ),
+              direction: DismissDirection.endToStart,
+              key: UniqueKey(),
+              child: CheckboxListTile(
+                title: Text(widget.items[index].content),
+                value: widget.items[index].completed,
+                onChanged: (value) {
+                  print("ListBox Value : $value");
+                  DatabaseService.updateTaskStatue(widget.items[index].id!,
+                          widget.items[index].completed)
+                      .then((value) {
+                    widget.onListChange();
+                  });
                 },
-                background: Container(
-                  color: Colors.blue,
-                ),
-                direction: DismissDirection.endToStart,
-                key: UniqueKey(),
-                child: GestureDetector(
-                    onTapDown: (details) => _getTapPosition(details),
-                    onLongPress: () {
-                      showContextMenu(context, widget.items[index]);
-                    },
-                    child: Visibility(
-                      visible: displayCompletedTasks ||
-                          !widget.items[index].completed,
-                      child: CheckboxListTile(
-                        title: Text(widget.items[index].content),
-                        value: widget.items[index].completed,
-                        onChanged: (value) {
-                          print("ListBox Value : $value");
-                          DatabaseService.updateTaskStatue(
-                                  widget.items[index].id!,
-                                  widget.items[index].completed)
-                              .then((value) {
-                            widget.onListChange();
-                          });
-                        },
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    )));
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+            );
           },
         ),
         SwitchListTile(
